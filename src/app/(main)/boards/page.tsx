@@ -1,4 +1,9 @@
-import { BoardList } from "@/features/board/components/board-list";
+import type { Metadata } from 'next'
+import { BoardList } from '@/features/board/components/board-list'
+
+export const metadata: Metadata = {
+  title: '게시판 | Next Portal',
+}
 
 export default function BoardsPage() {
   return (
@@ -6,5 +11,5 @@ export default function BoardsPage() {
       <h1 className="text-2xl font-bold">게시판</h1>
       <BoardList />
     </div>
-  );
+  )
 }
