@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { getMyMenus } from '@/lib/api/system'
 
 export interface MenuItem {
-  id: number
+  id: string
   name: string
   path: string
   icon?: string

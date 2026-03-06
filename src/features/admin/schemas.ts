@@ -40,7 +40,7 @@ export const menuSchema = z.object({
   name: z.string().min(1, '메뉴명을 입력해주세요'),
   path: z.string().min(1, '경로를 입력해주세요'),
   icon: z.string().optional(),
-  parentId: z.number().optional(),
+  parentId: z.string().optional(),
   sortOrder: z.number().min(0, '정렬순서는 0 이상이어야 합니다'),
 })
 

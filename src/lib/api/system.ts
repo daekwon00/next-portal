@@ -25,13 +25,13 @@ export async function createRole(data: { name: string; description: string }) {
 }
 
 export async function updateRole(
-  roleId: number,
+  roleId: string,
   data: { name: string; description: string }
 ) {
   return apiClient.put(`admin/roles/${roleId}`, { json: data }).json<Role>()
 }
 
-export async function deleteRole(roleId: number) {
+export async function deleteRole(roleId: string) {
   return apiClient.delete(`admin/roles/${roleId}`).json()
 }
 
@@ -44,11 +44,11 @@ export async function createMenu(data: CreateMenuRequest) {
   return apiClient.post('admin/menus', { json: data }).json<Menu>()
 }
 
-export async function updateMenu(menuId: number, data: CreateMenuRequest) {
+export async function updateMenu(menuId: string, data: CreateMenuRequest) {
   return apiClient.put(`admin/menus/${menuId}`, { json: data }).json<Menu>()
 }
 
-export async function deleteMenu(menuId: number) {
+export async function deleteMenu(menuId: string) {
   return apiClient.delete(`admin/menus/${menuId}`).json()
 }
 
@@ -57,7 +57,7 @@ export async function getMenuRoles() {
   return apiClient.get('admin/menu-roles').json<MenuRole[]>()
 }
 
-export async function updateMenuRoles(roleId: number, menuIds: number[]) {
+export async function updateMenuRoles(roleId: string, menuIds: string[]) {
   return apiClient
     .put(`admin/menu-roles/${roleId}`, { json: { menuIds } })
     .json()
@@ -96,8 +96,8 @@ export async function getPositionRoles() {
 }
 
 export async function updatePositionRoles(
-  positionId: number,
-  roleIds: number[]
+  positionId: string,
+  roleIds: string[]
 ) {
   return apiClient
     .put(`admin/position-roles/${positionId}`, { json: { roleIds } })

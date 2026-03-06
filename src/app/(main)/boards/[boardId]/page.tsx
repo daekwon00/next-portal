@@ -1,37 +1,36 @@
-"use client";
+'use client'
 
-import { useCallback, useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import { useBoard } from "@/features/board/hooks/use-boards";
-import { usePosts } from "@/features/board/hooks/use-posts";
-import { PostDataTable } from "@/features/board/components/post-data-table";
-import { SearchInput } from "@/components/common/search-input";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useCallback, useState } from 'react'
+import { useParams } from 'next/navigation'
+import Link from 'next/link'
+import { Plus } from 'lucide-react'
+import { useBoard } from '@/features/board/hooks/use-boards'
+import { usePosts } from '@/features/board/hooks/use-posts'
+import { PostDataTable } from '@/features/board/components/post-data-table'
+import { SearchInput } from '@/components/common/search-input'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function BoardPostsPage() {
-  const { boardId } = useParams<{ boardId: string }>();
-  const id = Number(boardId);
+  const { boardId } = useParams<{ boardId: string }>()
 
-  const [page, setPage] = useState(0);
-  const [search, setSearch] = useState("");
-  const [searchType, setSearchType] = useState<string>("all");
+  const [page, setPage] = useState(0)
+  const [search, setSearch] = useState('')
+  const [searchType, setSearchType] = useState<string>('all')
 
-  const { data: board } = useBoard(id);
-  const { data: postsData, isLoading } = usePosts(id, {
+  const { data: board } = useBoard(boardId)
+  const { data: postsData, isLoading } = usePosts(boardId, {
     page,
     size: 10,
     search: search || undefined,
-    searchType: searchType as "title" | "author" | "all",
-  });
+    searchType: searchType as 'title' | 'author' | 'all',
+  })
 
   const handleSearch = useCallback((newSearch: string, newType: string) => {
-    setSearch(newSearch);
-    setSearchType(newType);
-    setPage(0);
-  }, []);
+    setSearch(newSearch)
+    setSearchType(newType)
+    setPage(0)
+  }, [])
 
   return (
     <div className="space-y-6">
@@ -64,5 +63,5 @@ export default function BoardPostsPage() {
         />
       )}
     </div>
-  );
+  )
 }

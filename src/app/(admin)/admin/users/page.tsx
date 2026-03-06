@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   type ColumnDef,
-} from "@tanstack/react-table";
-import { toast } from "sonner";
-import { Plus, Search } from "lucide-react";
-import { PageHeader } from "@/components/common/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
+} from '@tanstack/react-table'
+import { toast } from 'sonner'
+import { Plus, Search } from 'lucide-react'
+import { PageHeader } from '@/components/common/page-header'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Switch } from '@/components/ui/switch'
 import {
   Table,
   TableBody,
@@ -22,43 +22,50 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useAdminUsers, useToggleUserActive } from "@/features/admin/hooks/use-admin-users";
-import { useDebounce } from "@/hooks/use-debounce";
-import { formatDate } from "@/lib/format";
-import type { AdminUser } from "@/types/admin";
+} from '@/components/ui/table'
+import { Skeleton } from '@/components/ui/skeleton'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  useAdminUsers,
+  useToggleUserActive,
+} from '@/features/admin/hooks/use-admin-users'
+import { useDebounce } from '@/hooks/use-debounce'
+import { formatDate } from '@/lib/format'
+import type { AdminUser } from '@/types/admin'
 
 export default function AdminUsersPage() {
-  const router = useRouter();
-  const [page, setPage] = useState(0);
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search);
+  const router = useRouter()
+  const [page, setPage] = useState(0)
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search)
 
-  const { data, isLoading } = useAdminUsers({ page, size: 10, search: debouncedSearch });
-  const toggleActive = useToggleUserActive();
+  const { data, isLoading } = useAdminUsers({
+    page,
+    size: 10,
+    search: debouncedSearch,
+  })
+  const toggleActive = useToggleUserActive()
 
-  function handleToggleActive(userId: number) {
+  function handleToggleActive(userId: string) {
     toggleActive.mutate(userId, {
-      onSuccess: () => toast.success("상태가 변경되었습니다."),
-      onError: () => toast.error("상태 변경에 실패했습니다."),
-    });
+      onSuccess: () => toast.success('상태가 변경되었습니다.'),
+      onError: () => toast.error('상태 변경에 실패했습니다.'),
+    })
   }
 
   const columns: ColumnDef<AdminUser>[] = [
     {
-      accessorKey: "username",
-      header: "아이디",
+      accessorKey: 'username',
+      header: '아이디',
       size: 120,
     },
     {
-      accessorKey: "name",
-      header: "이름",
+      accessorKey: 'name',
+      header: '이름',
       size: 100,
       cell: ({ row }) => (
         <button
-          className="hover:underline font-medium"
+          className="font-medium hover:underline"
           onClick={() => router.push(`/admin/users/${row.original.id}/edit`)}
         >
           {row.original.name}
@@ -66,22 +73,24 @@ export default function AdminUsersPage() {
       ),
     },
     {
-      accessorKey: "email",
-      header: "이메일",
+      accessorKey: 'email',
+      header: '이메일',
     },
     {
-      accessorKey: "role",
-      header: "역할",
+      accessorKey: 'role',
+      header: '역할',
       size: 100,
       cell: ({ row }) => (
-        <Badge variant={row.original.role === "ADMIN" ? "default" : "secondary"}>
+        <Badge
+          variant={row.original.role === 'ADMIN' ? 'default' : 'secondary'}
+        >
           {row.original.role}
         </Badge>
       ),
     },
     {
-      accessorKey: "isActive",
-      header: "상태",
+      accessorKey: 'isActive',
+      header: '상태',
       size: 80,
       cell: ({ row }) => (
         <Switch
@@ -91,38 +100,41 @@ export default function AdminUsersPage() {
       ),
     },
     {
-      accessorKey: "createdAt",
-      header: "가입일",
+      accessorKey: 'createdAt',
+      header: '가입일',
       size: 120,
       cell: ({ row }) => formatDate(row.original.createdAt),
     },
-  ];
+  ]
 
   const table = useReactTable({
     data: data?.content ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
-  const totalPages = data?.totalPages ?? 0;
+  const totalPages = data?.totalPages ?? 0
 
   return (
     <div className="space-y-6">
-      <PageHeader title="사용자 관리" description="사용자를 조회하고 관리합니다.">
-        <Button onClick={() => router.push("/admin/users/register")}>
+      <PageHeader
+        title="사용자 관리"
+        description="사용자를 조회하고 관리합니다."
+      >
+        <Button onClick={() => router.push('/admin/users/register')}>
           <Plus className="mr-2 size-4" />
           사용자 등록
         </Button>
       </PageHeader>
 
       <div className="relative max-w-sm">
-        <Search className="text-muted-foreground absolute left-3 top-1/2 size-4 -translate-y-1/2" />
+        <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
         <Input
           placeholder="이름 또는 이메일로 검색"
           value={search}
           onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(0);
+            setSearch(e.target.value)
+            setPage(0)
           }}
           className="pl-9"
         />
@@ -138,10 +150,16 @@ export default function AdminUsersPage() {
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id} style={{ width: header.getSize() }}>
+                      <TableHead
+                        key={header.id}
+                        style={{ width: header.getSize() }}
+                      >
                         {header.isPlaceholder
                           ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
                       </TableHead>
                     ))}
                   </TableRow>
@@ -153,14 +171,20 @@ export default function AdminUsersPage() {
                     <TableRow key={row.id}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
                         </TableCell>
                       ))}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
                       사용자가 없습니다.
                     </TableCell>
                   </TableRow>
@@ -196,5 +220,5 @@ export default function AdminUsersPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

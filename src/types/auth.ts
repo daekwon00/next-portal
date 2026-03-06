@@ -1,25 +1,25 @@
 export interface LoginRequest {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: AuthUser;
+  accessToken: string
+  refreshToken: string
+  user: AuthUser
 }
 
 export interface RegisterRequest {
-  username: string;
-  name: string;
-  email: string;
-  password: string;
+  username: string
+  name: string
+  email: string
+  password: string
 }
 
 export interface AuthUser {
-  id: number;
-  username: string;
-  name: string;
-  email: string;
-  role: string;
+  id: string
+  username: string
+  name: string
+  email: string
+  role: string
 }

@@ -1,12 +1,11 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import { Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Save } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
   TableBody,
@@ -14,49 +13,55 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useRoles, usePositionRoles, useUpdatePositionRoles } from "../hooks/use-system";
+} from '@/components/ui/table'
+import {
+  useRoles,
+  usePositionRoles,
+  useUpdatePositionRoles,
+} from '../hooks/use-system'
 
 export function PositionRoleManagement() {
-  const { data: roles, isLoading: rolesLoading } = useRoles();
-  const { data: positionRoles, isLoading: prLoading } = usePositionRoles();
-  const updatePositionRoles = useUpdatePositionRoles();
+  const { data: roles, isLoading: rolesLoading } = useRoles()
+  const { data: positionRoles, isLoading: prLoading } = usePositionRoles()
+  const updatePositionRoles = useUpdatePositionRoles()
 
-  const [editMap, setEditMap] = useState<Record<number, number[]>>({});
-  const isLoading = rolesLoading || prLoading;
+  const [editMap, setEditMap] = useState<Record<string, string[]>>({})
+  const [prevPositionRoles, setPrevPositionRoles] = useState(positionRoles)
+  const isLoading = rolesLoading || prLoading
 
-  useEffect(() => {
+  if (positionRoles !== prevPositionRoles) {
+    setPrevPositionRoles(positionRoles)
     if (positionRoles) {
-      const map: Record<number, number[]> = {};
+      const map: Record<string, string[]> = {}
       positionRoles.forEach((pr) => {
-        map[pr.positionId] = [...pr.roleIds];
-      });
-      setEditMap(map);
+        map[pr.positionId] = [...pr.roleIds]
+      })
+      setEditMap(map)
     }
-  }, [positionRoles]);
-
-  function toggleRole(positionId: number, roleId: number) {
-    setEditMap((prev) => {
-      const current = prev[positionId] ?? [];
-      const next = current.includes(roleId)
-        ? current.filter((id) => id !== roleId)
-        : [...current, roleId];
-      return { ...prev, [positionId]: next };
-    });
   }
 
-  function handleSave(positionId: number) {
-    const roleIds = editMap[positionId] ?? [];
+  function toggleRole(positionId: string, roleId: string) {
+    setEditMap((prev) => {
+      const current = prev[positionId] ?? []
+      const next = current.includes(roleId)
+        ? current.filter((id) => id !== roleId)
+        : [...current, roleId]
+      return { ...prev, [positionId]: next }
+    })
+  }
+
+  function handleSave(positionId: string) {
+    const roleIds = editMap[positionId] ?? []
     updatePositionRoles.mutate(
       { positionId, roleIds },
       {
-        onSuccess: () => toast.success("직급-역할 매핑이 저장되었습니다."),
-        onError: () => toast.error("저장에 실패했습니다."),
-      },
-    );
+        onSuccess: () => toast.success('직급-역할 매핑이 저장되었습니다.'),
+        onError: () => toast.error('저장에 실패했습니다.'),
+      }
+    )
   }
 
-  if (isLoading) return <Skeleton className="h-64 w-full" />;
+  if (isLoading) return <Skeleton className="h-64 w-full" />
 
   return (
     <div className="space-y-4">
@@ -66,7 +71,11 @@ export function PositionRoleManagement() {
             <TableRow>
               <TableHead style={{ width: 160 }}>직급</TableHead>
               {roles?.map((role) => (
-                <TableHead key={role.id} className="text-center" style={{ width: 120 }}>
+                <TableHead
+                  key={role.id}
+                  className="text-center"
+                  style={{ width: 120 }}
+                >
                   {role.name}
                 </TableHead>
               ))}
@@ -77,12 +86,18 @@ export function PositionRoleManagement() {
             {positionRoles?.length ? (
               positionRoles.map((pr) => (
                 <TableRow key={pr.positionId}>
-                  <TableCell className="font-medium">{pr.positionName}</TableCell>
+                  <TableCell className="font-medium">
+                    {pr.positionName}
+                  </TableCell>
                   {roles?.map((role) => (
                     <TableCell key={role.id} className="text-center">
                       <Checkbox
-                        checked={(editMap[pr.positionId] ?? []).includes(role.id)}
-                        onCheckedChange={() => toggleRole(pr.positionId, role.id)}
+                        checked={(editMap[pr.positionId] ?? []).includes(
+                          role.id
+                        )}
+                        onCheckedChange={() =>
+                          toggleRole(pr.positionId, role.id)
+                        }
                       />
                     </TableCell>
                   ))}
@@ -100,7 +115,10 @@ export function PositionRoleManagement() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={(roles?.length ?? 0) + 2} className="h-24 text-center">
+                <TableCell
+                  colSpan={(roles?.length ?? 0) + 2}
+                  className="h-24 text-center"
+                >
                   직급 데이터가 없습니다.
                 </TableCell>
               </TableRow>
@@ -109,5 +127,5 @@ export function PositionRoleManagement() {
         </Table>
       </div>
     </div>
-  );
+  )
 }

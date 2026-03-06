@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Download, Edit, Trash2 } from "lucide-react";
-import type { Post } from "@/types/board";
-import { formatDateTime } from "@/lib/format";
-import { formatNumber } from "@/lib/format";
-import { downloadFile } from "@/lib/api/file";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { Download, Edit, Trash2 } from 'lucide-react'
+import type { Post } from '@/types/board'
+import { formatDateTime } from '@/lib/format'
+import { formatNumber } from '@/lib/format'
+import { downloadFile } from '@/lib/api/file'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
+import { ConfirmDialog } from '@/components/common/confirm-dialog'
 
 interface PostViewerProps {
-  post: Post;
-  onDelete: () => void;
+  post: Post
+  onDelete: () => void
 }
 
 export function PostViewer({ post, onDelete }: PostViewerProps) {
-  const { data: session } = useSession();
-  const router = useRouter();
-  const isAuthor = session?.user?.username === post.author.username;
+  const { data: session } = useSession()
+  const router = useRouter()
+  const isAuthor = session?.user?.username === post.author.username
 
-  async function handleDownload(fileId: number, fileName: string) {
-    const blob = await downloadFile(fileId);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    URL.revokeObjectURL(url);
+  async function handleDownload(fileId: string, fileName: string) {
+    const blob = await downloadFile(fileId)
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = fileName
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   return (
@@ -90,9 +90,7 @@ export function PostViewer({ post, onDelete }: PostViewerProps) {
             <Button
               variant="outline"
               onClick={() =>
-                router.push(
-                  `/boards/${post.boardId}/posts/${post.id}/edit`
-                )
+                router.push(`/boards/${post.boardId}/posts/${post.id}/edit`)
               }
             >
               <Edit className="size-4" />
@@ -115,5 +113,5 @@ export function PostViewer({ post, onDelete }: PostViewerProps) {
         )}
       </div>
     </div>
-  );
+  )
 }

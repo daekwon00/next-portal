@@ -13,9 +13,9 @@ import { Button } from '@/components/ui/button'
 import type { Post } from '@/types/board'
 
 interface PostFormProps {
-  boardId: number
+  boardId: string
   initialData?: Post
-  onSubmit: (data: PostFormValues & { fileIds: number[] }) => void
+  onSubmit: (data: PostFormValues & { fileIds: string[] }) => void
   isLoading?: boolean
 }
 
@@ -37,7 +37,7 @@ export function PostForm({ initialData, onSubmit, isLoading }: PostFormProps) {
   })
 
   async function handleFormSubmit(data: PostFormValues) {
-    let fileIds: number[] = []
+    let fileIds: string[] = []
 
     if (files.length > 0) {
       setUploading(true)

@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
 
 const mockUsers = Array.from({ length: 25 }, (_, i) => ({
-  id: i + 1,
+  id: i === 0 ? 'admin' : `user${i}`,
   username: i === 0 ? 'admin' : `user${i}`,
   name: i === 0 ? '관리자' : `사용자${i}`,
   email: i === 0 ? 'admin@example.com' : `user${i}@example.com`,
@@ -14,14 +14,14 @@ const mockUsers = Array.from({ length: 25 }, (_, i) => ({
 }))
 
 const mockRoles = [
-  { id: 1, name: 'ADMIN', description: '시스템 관리자' },
-  { id: 2, name: 'USER', description: '일반 사용자' },
-  { id: 3, name: 'MANAGER', description: '매니저' },
+  { id: 'ROLE_ADMIN', name: 'ADMIN', description: '시스템 관리자' },
+  { id: 'ROLE_USER', name: 'USER', description: '일반 사용자' },
+  { id: 'ROLE_MANAGER', name: 'MANAGER', description: '매니저' },
 ]
 
 const mockMenus = [
   {
-    id: 1,
+    id: 'MENU_DASHBOARD',
     name: '대시보드',
     path: '/dashboard',
     icon: 'LayoutDashboard',
@@ -30,7 +30,7 @@ const mockMenus = [
     children: [],
   },
   {
-    id: 2,
+    id: 'MENU_BOARDS',
     name: '게시판',
     path: '/boards',
     icon: 'FileText',
@@ -38,25 +38,25 @@ const mockMenus = [
     isActive: true,
     children: [
       {
-        id: 21,
+        id: 'MENU_NOTICE',
         name: '공지사항',
-        path: '/boards/1',
+        path: '/boards/NOTICE',
         sortOrder: 1,
         isActive: true,
-        parentId: 2,
+        parentId: 'MENU_BOARDS',
       },
       {
-        id: 22,
+        id: 'MENU_FREE',
         name: '자유게시판',
-        path: '/boards/2',
+        path: '/boards/FREE',
         sortOrder: 2,
         isActive: true,
-        parentId: 2,
+        parentId: 'MENU_BOARDS',
       },
     ],
   },
   {
-    id: 3,
+    id: 'MENU_PROFILE',
     name: '프로필',
     path: '/user/profile',
     icon: 'User',
@@ -67,16 +67,16 @@ const mockMenus = [
 ]
 
 const mockMenuRoles = [
-  { menuId: 1, roleId: 1 },
-  { menuId: 2, roleId: 1 },
-  { menuId: 3, roleId: 1 },
-  { menuId: 21, roleId: 1 },
-  { menuId: 22, roleId: 1 },
-  { menuId: 1, roleId: 2 },
-  { menuId: 2, roleId: 2 },
-  { menuId: 3, roleId: 2 },
-  { menuId: 21, roleId: 2 },
-  { menuId: 22, roleId: 2 },
+  { menuId: 'MENU_DASHBOARD', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_BOARDS', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_PROFILE', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_NOTICE', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_FREE', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_DASHBOARD', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_BOARDS', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_PROFILE', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_NOTICE', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_FREE', roleId: 'ROLE_USER' },
 ]
 
 const mockCodeGroups = [
@@ -169,15 +169,23 @@ const mockCodes = [
 ]
 
 const mockPositionRoles = [
-  { positionId: 1, positionName: '사원', roleIds: [2] },
-  { positionId: 2, positionName: '대리', roleIds: [2] },
-  { positionId: 3, positionName: '과장', roleIds: [2, 3] },
-  { positionId: 4, positionName: '부장', roleIds: [1, 2, 3] },
+  { positionId: 'POS_STAFF', positionName: '사원', roleIds: ['ROLE_USER'] },
+  { positionId: 'POS_SENIOR', positionName: '대리', roleIds: ['ROLE_USER'] },
+  {
+    positionId: 'POS_MANAGER',
+    positionName: '과장',
+    roleIds: ['ROLE_USER', 'ROLE_MANAGER'],
+  },
+  {
+    positionId: 'POS_DIRECTOR',
+    positionName: '부장',
+    roleIds: ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_MANAGER'],
+  },
 ]
 
 const mockAdminMenus = [
   {
-    id: 10,
+    id: 'AMENU_DASHBOARD',
     name: '관리자 대시보드',
     path: '/admin',
     icon: 'Shield',
@@ -186,7 +194,7 @@ const mockAdminMenus = [
     children: [],
   },
   {
-    id: 11,
+    id: 'AMENU_USERS',
     name: '사용자 관리',
     path: '/admin/users',
     icon: 'Users',
@@ -195,7 +203,7 @@ const mockAdminMenus = [
     children: [],
   },
   {
-    id: 12,
+    id: 'AMENU_BOARDS',
     name: '게시판 관리',
     path: '/admin/boards',
     icon: 'FileText',
@@ -204,7 +212,7 @@ const mockAdminMenus = [
     children: [],
   },
   {
-    id: 13,
+    id: 'AMENU_SYSTEM',
     name: '시스템 관리',
     path: '/admin/system',
     icon: 'Settings',
@@ -212,44 +220,44 @@ const mockAdminMenus = [
     isActive: true,
     children: [
       {
-        id: 131,
+        id: 'AMENU_ROLES',
         name: '역할 관리',
         path: '/admin/system/roles',
         sortOrder: 1,
         isActive: true,
-        parentId: 13,
+        parentId: 'AMENU_SYSTEM',
       },
       {
-        id: 132,
+        id: 'AMENU_MENUS',
         name: '메뉴 관리',
         path: '/admin/system/menus',
         sortOrder: 2,
         isActive: true,
-        parentId: 13,
+        parentId: 'AMENU_SYSTEM',
       },
       {
-        id: 133,
+        id: 'AMENU_MENUROLES',
         name: '권한 매핑',
         path: '/admin/system/menu-roles',
         sortOrder: 3,
         isActive: true,
-        parentId: 13,
+        parentId: 'AMENU_SYSTEM',
       },
       {
-        id: 134,
+        id: 'AMENU_CODES',
         name: '공통코드',
         path: '/admin/system/codes',
         sortOrder: 4,
         isActive: true,
-        parentId: 13,
+        parentId: 'AMENU_SYSTEM',
       },
       {
-        id: 135,
+        id: 'AMENU_POSROLES',
         name: '직급-역할',
         path: '/admin/system/position-roles',
         sortOrder: 5,
         isActive: true,
-        parentId: 13,
+        parentId: 'AMENU_SYSTEM',
       },
     ],
   },
@@ -310,13 +318,13 @@ export const adminHandlers = [
       content,
       totalElements: filtered.length,
       totalPages: Math.ceil(filtered.length / size),
-      number: page,
+      page,
       size,
     })
   }),
 
   http.get('*/api/v1/admin/users/:userId', ({ params }) => {
-    const user = mockUsers.find((u) => u.id === Number(params.userId))
+    const user = mockUsers.find((u) => u.id === params.userId)
     if (!user) return new HttpResponse(null, { status: 404 })
     return HttpResponse.json(user)
   }),
@@ -324,7 +332,7 @@ export const adminHandlers = [
   http.post('*/api/v1/admin/users', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>
     const newUser = {
-      id: mockUsers.length + 1,
+      id: body.username as string,
       ...body,
       isActive: true,
       lastLoginAt: null,
@@ -334,14 +342,14 @@ export const adminHandlers = [
   }),
 
   http.put('*/api/v1/admin/users/:userId', async ({ params, request }) => {
-    const user = mockUsers.find((u) => u.id === Number(params.userId))
+    const user = mockUsers.find((u) => u.id === params.userId)
     if (!user) return new HttpResponse(null, { status: 404 })
     const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json({ ...user, ...body })
   }),
 
   http.patch('*/api/v1/admin/users/:userId/toggle-active', ({ params }) => {
-    const user = mockUsers.find((u) => u.id === Number(params.userId))
+    const user = mockUsers.find((u) => u.id === params.userId)
     if (!user) return new HttpResponse(null, { status: 404 })
     user.isActive = !user.isActive
     return HttpResponse.json(user)
@@ -351,21 +359,21 @@ export const adminHandlers = [
   http.get('*/api/v1/admin/boards', () => {
     return HttpResponse.json([
       {
-        id: 1,
+        id: 'NOTICE',
         name: '공지사항',
         description: '공지사항 게시판',
         isActive: true,
         postCount: 15,
       },
       {
-        id: 2,
+        id: 'FREE',
         name: '자유게시판',
         description: '자유롭게 글을 쓸 수 있는 게시판',
         isActive: true,
         postCount: 42,
       },
       {
-        id: 3,
+        id: 'QNA',
         name: '질문답변',
         description: '질문과 답변 게시판',
         isActive: true,
@@ -377,7 +385,7 @@ export const adminHandlers = [
   http.post('*/api/v1/admin/boards', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json(
-      { id: 4, ...body, isActive: true, postCount: 0 },
+      { id: `BOARD_${Date.now()}`, ...body, isActive: true, postCount: 0 },
       { status: 201 }
     )
   }),
@@ -385,7 +393,7 @@ export const adminHandlers = [
   http.put('*/api/v1/admin/boards/:boardId', async ({ params, request }) => {
     const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json({
-      id: Number(params.boardId),
+      id: params.boardId,
       ...body,
       isActive: true,
       postCount: 0,
@@ -394,7 +402,7 @@ export const adminHandlers = [
 
   http.patch('*/api/v1/admin/boards/:boardId/toggle-active', ({ params }) => {
     return HttpResponse.json({
-      id: Number(params.boardId),
+      id: params.boardId,
       name: '게시판',
       description: '',
       isActive: false,
@@ -408,14 +416,14 @@ export const adminHandlers = [
   http.post('*/api/v1/admin/roles', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json(
-      { id: mockRoles.length + 1, ...body },
+      { id: `ROLE_${Date.now()}`, ...body },
       { status: 201 }
     )
   }),
 
   http.put('*/api/v1/admin/roles/:roleId', async ({ params, request }) => {
     const body = (await request.json()) as Record<string, unknown>
-    return HttpResponse.json({ id: Number(params.roleId), ...body })
+    return HttpResponse.json({ id: params.roleId, ...body })
   }),
 
   http.delete(
@@ -429,7 +437,7 @@ export const adminHandlers = [
   http.post('*/api/v1/admin/menus', async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json(
-      { id: 100, ...body, isActive: true, children: [] },
+      { id: `MENU_${Date.now()}`, ...body, isActive: true, children: [] },
       { status: 201 }
     )
   }),
@@ -437,7 +445,7 @@ export const adminHandlers = [
   http.put('*/api/v1/admin/menus/:menuId', async ({ params, request }) => {
     const body = (await request.json()) as Record<string, unknown>
     return HttpResponse.json({
-      id: Number(params.menuId),
+      id: params.menuId,
       ...body,
       isActive: true,
     })

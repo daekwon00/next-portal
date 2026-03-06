@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { Plus, Pencil } from "lucide-react";
-import { PageHeader } from "@/components/common/page-header";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
+import { Plus, Pencil } from 'lucide-react'
+import { PageHeader } from '@/components/common/page-header'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -19,31 +19,31 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
   useAdminBoards,
   useCreateBoard,
   useUpdateBoard,
   useToggleBoardActive,
-} from "@/features/admin/hooks/use-admin-boards";
-import { boardSchema, type BoardFormValues } from "@/features/admin/schemas";
-import type { Board } from "@/types/board";
+} from '@/features/admin/hooks/use-admin-boards'
+import { boardSchema, type BoardFormValues } from '@/features/admin/schemas'
+import type { Board } from '@/types/board'
 
 export default function AdminBoardsPage() {
-  const { data: boards, isLoading } = useAdminBoards();
-  const createBoard = useCreateBoard();
-  const updateBoard = useUpdateBoard();
-  const toggleActive = useToggleBoardActive();
+  const { data: boards, isLoading } = useAdminBoards()
+  const createBoard = useCreateBoard()
+  const updateBoard = useUpdateBoard()
+  const toggleActive = useToggleBoardActive()
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingBoard, setEditingBoard] = useState<Board | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [editingBoard, setEditingBoard] = useState<Board | null>(null)
 
   const {
     register,
@@ -52,18 +52,18 @@ export default function AdminBoardsPage() {
     formState: { errors },
   } = useForm<BoardFormValues>({
     resolver: zodResolver(boardSchema),
-  });
+  })
 
   function openCreate() {
-    setEditingBoard(null);
-    reset({ name: "", description: "" });
-    setDialogOpen(true);
+    setEditingBoard(null)
+    reset({ name: '', description: '' })
+    setDialogOpen(true)
   }
 
   function openEdit(board: Board) {
-    setEditingBoard(board);
-    reset({ name: board.name, description: board.description });
-    setDialogOpen(true);
+    setEditingBoard(board)
+    reset({ name: board.name, description: board.description })
+    setDialogOpen(true)
   }
 
   function onSubmit(data: BoardFormValues) {
@@ -72,35 +72,38 @@ export default function AdminBoardsPage() {
         { boardId: editingBoard.id, data },
         {
           onSuccess: () => {
-            toast.success("게시판이 수정되었습니다.");
-            setDialogOpen(false);
+            toast.success('게시판이 수정되었습니다.')
+            setDialogOpen(false)
           },
-          onError: () => toast.error("게시판 수정에 실패했습니다."),
-        },
-      );
+          onError: () => toast.error('게시판 수정에 실패했습니다.'),
+        }
+      )
     } else {
       createBoard.mutate(data, {
         onSuccess: () => {
-          toast.success("게시판이 생성되었습니다.");
-          setDialogOpen(false);
+          toast.success('게시판이 생성되었습니다.')
+          setDialogOpen(false)
         },
-        onError: () => toast.error("게시판 생성에 실패했습니다."),
-      });
+        onError: () => toast.error('게시판 생성에 실패했습니다.'),
+      })
     }
   }
 
-  function handleToggleActive(boardId: number) {
+  function handleToggleActive(boardId: string) {
     toggleActive.mutate(boardId, {
-      onSuccess: () => toast.success("상태가 변경되었습니다."),
-      onError: () => toast.error("상태 변경에 실패했습니다."),
-    });
+      onSuccess: () => toast.success('상태가 변경되었습니다.'),
+      onError: () => toast.error('상태 변경에 실패했습니다.'),
+    })
   }
 
-  const isPending = createBoard.isPending || updateBoard.isPending;
+  const isPending = createBoard.isPending || updateBoard.isPending
 
   return (
     <div className="space-y-6">
-      <PageHeader title="게시판 관리" description="게시판을 생성하고 관리합니다.">
+      <PageHeader
+        title="게시판 관리"
+        description="게시판을 생성하고 관리합니다."
+      >
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={openCreate}>
@@ -110,29 +113,39 @@ export default function AdminBoardsPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingBoard ? "게시판 수정" : "게시판 생성"}</DialogTitle>
+              <DialogTitle>
+                {editingBoard ? '게시판 수정' : '게시판 생성'}
+              </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">게시판 이름</Label>
-                <Input id="name" {...register("name")} />
+                <Input id="name" {...register('name')} />
                 {errors.name && (
-                  <p className="text-destructive text-sm">{errors.name.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.name.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description">설명</Label>
-                <Input id="description" {...register("description")} />
+                <Input id="description" {...register('description')} />
                 {errors.description && (
-                  <p className="text-destructive text-sm">{errors.description.message}</p>
+                  <p className="text-destructive text-sm">
+                    {errors.description.message}
+                  </p>
                 )}
               </div>
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setDialogOpen(false)}
+                >
                   취소
                 </Button>
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? "저장 중..." : editingBoard ? "수정" : "생성"}
+                  {isPending ? '저장 중...' : editingBoard ? '수정' : '생성'}
                 </Button>
               </div>
             </form>
@@ -159,7 +172,9 @@ export default function AdminBoardsPage() {
               {boards?.length ? (
                 boards.map((board) => (
                   <TableRow key={board.id}>
-                    <TableCell className="text-muted-foreground">{board.id}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {board.id}
+                    </TableCell>
                     <TableCell className="font-medium">{board.name}</TableCell>
                     <TableCell>{board.description}</TableCell>
                     <TableCell>
@@ -172,7 +187,11 @@ export default function AdminBoardsPage() {
                       />
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" onClick={() => openEdit(board)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openEdit(board)}
+                      >
                         <Pencil className="size-4" />
                       </Button>
                     </TableCell>
@@ -190,5 +209,5 @@ export default function AdminBoardsPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

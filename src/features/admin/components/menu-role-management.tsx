@@ -1,19 +1,18 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import { Save } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Save } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -21,60 +20,70 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useRoles, useMenus, useMenuRoles, useUpdateMenuRoles } from "../hooks/use-system";
+} from '@/components/ui/table'
+import {
+  useRoles,
+  useMenus,
+  useMenuRoles,
+  useUpdateMenuRoles,
+} from '../hooks/use-system'
 
 export function MenuRoleManagement() {
-  const { data: roles, isLoading: rolesLoading } = useRoles();
-  const { data: menus, isLoading: menusLoading } = useMenus();
-  const { data: menuRoles, isLoading: menuRolesLoading } = useMenuRoles();
-  const updateMenuRoles = useUpdateMenuRoles();
+  const { data: roles, isLoading: rolesLoading } = useRoles()
+  const { data: menus, isLoading: menusLoading } = useMenus()
+  const { data: menuRoles, isLoading: menuRolesLoading } = useMenuRoles()
+  const updateMenuRoles = useUpdateMenuRoles()
 
-  const [selectedRoleId, setSelectedRoleId] = useState<string>("");
-  const [checkedMenuIds, setCheckedMenuIds] = useState<number[]>([]);
+  const [selectedRoleId, setSelectedRoleId] = useState<string>('')
+  const [checkedMenuIds, setCheckedMenuIds] = useState<string[]>([])
+  const [prevRoleId, setPrevRoleId] = useState<string>('')
 
-  const isLoading = rolesLoading || menusLoading || menuRolesLoading;
+  const isLoading = rolesLoading || menusLoading || menuRolesLoading
 
-  useEffect(() => {
-    if (selectedRoleId && menuRoles) {
-      const roleId = Number(selectedRoleId);
-      const assigned = menuRoles
-        .filter((mr) => mr.roleId === roleId)
-        .map((mr) => mr.menuId);
-      setCheckedMenuIds(assigned);
-    }
-  }, [selectedRoleId, menuRoles]);
+  if (selectedRoleId !== prevRoleId) {
+    setPrevRoleId(selectedRoleId)
+    const assigned =
+      selectedRoleId && menuRoles
+        ? menuRoles
+            .filter((mr) => mr.roleId === selectedRoleId)
+            .map((mr) => mr.menuId)
+        : []
+    setCheckedMenuIds(assigned)
+  }
 
-  function toggleMenu(menuId: number) {
+  function toggleMenu(menuId: string) {
     setCheckedMenuIds((prev) =>
       prev.includes(menuId)
         ? prev.filter((id) => id !== menuId)
-        : [...prev, menuId],
-    );
+        : [...prev, menuId]
+    )
   }
 
   function handleSave() {
-    if (!selectedRoleId) return;
+    if (!selectedRoleId) return
     updateMenuRoles.mutate(
-      { roleId: Number(selectedRoleId), menuIds: checkedMenuIds },
+      { roleId: selectedRoleId, menuIds: checkedMenuIds },
       {
-        onSuccess: () => toast.success("메뉴-역할 매핑이 저장되었습니다."),
-        onError: () => toast.error("저장에 실패했습니다."),
-      },
-    );
+        onSuccess: () => toast.success('메뉴-역할 매핑이 저장되었습니다.'),
+        onError: () => toast.error('저장에 실패했습니다.'),
+      }
+    )
   }
 
-  function flattenMenus(items: typeof menus, depth = 0): { id: number; name: string; depth: number }[] {
-    if (!items) return [];
+  function flattenMenus(
+    items: typeof menus,
+    depth = 0
+  ): { id: string; name: string; depth: number }[] {
+    if (!items) return []
     return items.flatMap((menu) => [
       { id: menu.id, name: menu.name, depth },
       ...flattenMenus(menu.children, depth + 1),
-    ]);
+    ])
   }
 
-  if (isLoading) return <Skeleton className="h-64 w-full" />;
+  if (isLoading) return <Skeleton className="h-64 w-full" />
 
-  const flatMenus = flattenMenus(menus);
+  const flatMenus = flattenMenus(menus)
 
   return (
     <div className="space-y-4">
@@ -91,9 +100,12 @@ export function MenuRoleManagement() {
             ))}
           </SelectContent>
         </Select>
-        <Button onClick={handleSave} disabled={!selectedRoleId || updateMenuRoles.isPending}>
+        <Button
+          onClick={handleSave}
+          disabled={!selectedRoleId || updateMenuRoles.isPending}
+        >
           <Save className="mr-2 size-4" />
-          {updateMenuRoles.isPending ? "저장 중..." : "저장"}
+          {updateMenuRoles.isPending ? '저장 중...' : '저장'}
         </Button>
       </div>
 
@@ -118,7 +130,7 @@ export function MenuRoleManagement() {
                     </TableCell>
                     <TableCell>
                       <span style={{ paddingLeft: menu.depth * 20 }}>
-                        {menu.depth > 0 && "└ "}
+                        {menu.depth > 0 && '└ '}
                         {menu.name}
                       </span>
                     </TableCell>
@@ -126,15 +138,19 @@ export function MenuRoleManagement() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={2} className="h-24 text-center">메뉴가 없습니다.</TableCell>
+                  <TableCell colSpan={2} className="h-24 text-center">
+                    메뉴가 없습니다.
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
       ) : (
-        <p className="text-muted-foreground py-8 text-center">역할을 선택해주세요.</p>
+        <p className="text-muted-foreground py-8 text-center">
+          역할을 선택해주세요.
+        </p>
       )}
     </div>
-  );
+  )
 }
