@@ -39,6 +39,10 @@ const MOCK_POSTS: MockPost[] = Array.from({ length: 20 }, (_, i) => ({
 }));
 
 export const postHandlers = [
+  http.get("*/api/v1/posts/recent", () => {
+    return HttpResponse.json(MOCK_POSTS.slice(0, 5));
+  }),
+
   http.get("*/api/v1/boards/:boardId/posts", ({ params, request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? "0");

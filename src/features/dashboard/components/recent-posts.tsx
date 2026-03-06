@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { usePosts } from "@/features/board/hooks/use-posts";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/format";
+import type { Post } from "@/types/board";
+
+function useRecentPosts() {
+  return useQuery({
+    queryKey: ["posts", "recent"],
+    queryFn: () => apiClient.get("posts/recent").json<Post[]>(),
+  });
+}
 
 export function RecentPosts() {
-  const { data, isLoading } = usePosts(0, { page: 0, size: 5 });
+  const { data: posts, isLoading } = useRecentPosts();
 
   return (
     <Card>
@@ -21,13 +30,13 @@ export function RecentPosts() {
               <Skeleton key={i} className="h-10 w-full" />
             ))}
           </div>
-        ) : !data?.content.length ? (
+        ) : !posts?.length ? (
           <p className="text-muted-foreground py-4 text-center text-sm">
             게시글이 없습니다.
           </p>
         ) : (
           <div className="space-y-1">
-            {data.content.map((post) => (
+            {posts.map((post) => (
               <Link
                 key={post.id}
                 href={`/boards/${post.boardId}/posts/${post.id}`}

@@ -6,6 +6,7 @@ import { QueryProvider } from "@/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { MswProvider } from "@/providers/msw-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +33,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <ThemeProvider>
-            <QueryProvider>
-              <TooltipProvider>
-                {children}
-                <Toaster richColors />
-              </TooltipProvider>
-            </QueryProvider>
-          </ThemeProvider>
-        </AuthProvider>
+        <MswProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <QueryProvider>
+                <TooltipProvider>
+                  {children}
+                  <Toaster richColors />
+                </TooltipProvider>
+              </QueryProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </MswProvider>
       </body>
     </html>
   );
