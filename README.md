@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# next-portal
 
-## Getting Started
+> ydk-lab 프론트엔드 프로젝트 — 포트폴리오 + 기술 쇼케이스 + AI 실험 플랫폼
 
-First, run the development server:
+## 기술 스택
+
+| 카테고리 | 기술 |
+|----------|------|
+| 프레임워크 | Next.js 16 (App Router, Turbopack) |
+| UI | React 19 + TypeScript |
+| 스타일링 | Tailwind CSS 4 + shadcn/ui |
+| 서버 상태 | TanStack Query 5 |
+| 클라이언트 상태 | Zustand 5 |
+| HTTP | ky |
+| 폼 | React Hook Form + Zod |
+| 테이블 | TanStack Table 8 |
+| 인증 | NextAuth.js 5 (Auth.js) |
+| 에디터 | Tiptap |
+| 차트 | Recharts |
+| 테스트 | Vitest + Playwright + MSW |
+
+## 시작하기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000 에서 확인
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 프로젝트 구조
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/              # Next.js App Router (Route Groups)
+│   ├── (auth)/       # 인증 페이지 (로그인, 회원가입)
+│   ├── (main)/       # 일반 사용자 영역 (사이드바 레이아웃)
+│   ├── (admin)/      # 관리자 영역
+│   └── api/          # Route Handlers
+├── components/       # 공유 컴포넌트
+│   ├── ui/           # shadcn/ui 컴포넌트
+│   ├── layout/       # 사이드바, 헤더
+│   └── common/       # 공통 컴포넌트
+├── features/         # 기능 모듈 (auth, board, user, admin, dashboard)
+├── lib/              # 유틸리티, API 클라이언트, 설정
+├── hooks/            # 글로벌 커스텀 훅
+├── stores/           # Zustand 스토어
+├── types/            # TypeScript 타입
+└── providers/        # Context Providers
+```
 
-## Learn More
+## 연관 프로젝트
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **백엔드**: [spring-cqrs](https://github.com/daekwon00/spring-cqrs) (Spring Boot, CQRS 패턴)
