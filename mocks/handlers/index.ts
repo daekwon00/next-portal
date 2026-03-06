@@ -4,6 +4,7 @@ import { postHandlers } from "./post";
 import { fileHandlers } from "./file";
 import { userHandlers } from "./user";
 import { dashboardHandlers } from "./dashboard";
+import { adminHandlers } from "./admin";
 
 export const handlers = [
   ...authHandlers,
@@ -12,4 +13,5 @@ export const handlers = [
   ...fileHandlers,
   ...userHandlers,
   ...dashboardHandlers,
+  ...adminHandlers,
 ];
