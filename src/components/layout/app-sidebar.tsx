@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 import { mainMenuItems } from "@/lib/constants";
 import {
   Sidebar,
@@ -17,10 +18,11 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   return (
     <Sidebar collapsible="icon">
@@ -65,11 +67,30 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Button variant="ghost" className="w-full justify-start">
-                <LogOut />
-                <span>로그아웃</span>
-              </Button>
+            <SidebarMenuButton size="lg" asChild>
+              <div className="flex items-center gap-2">
+                <Avatar className="size-8">
+                  <AvatarFallback>
+                    {session?.user?.name?.charAt(0) ?? "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">
+                    {session?.user?.name ?? "사용자"}
+                  </span>
+                  <span className="text-muted-foreground truncate text-xs">
+                    {session?.user?.email ?? ""}
+                  </span>
+                </div>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={() => signOut({ redirectTo: "/login" })}
+            >
+              <LogOut />
+              <span>로그아웃</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
