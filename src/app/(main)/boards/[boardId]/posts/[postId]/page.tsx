@@ -15,8 +15,6 @@ export default function PostDetailPage() {
   const deletePost = useDeletePost();
 
   function handleDelete() {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-
     deletePost.mutate(Number(postId), {
       onSuccess: () => router.push(`/boards/${boardId}`),
     });

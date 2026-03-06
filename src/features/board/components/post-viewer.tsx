@@ -10,6 +10,7 @@ import { downloadFile } from "@/lib/api/file";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { ConfirmDialog } from "@/components/common/confirm-dialog";
 
 interface PostViewerProps {
   post: Post;
@@ -97,10 +98,19 @@ export function PostViewer({ post, onDelete }: PostViewerProps) {
               <Edit className="size-4" />
               수정
             </Button>
-            <Button variant="destructive" onClick={onDelete}>
-              <Trash2 className="size-4" />
-              삭제
-            </Button>
+            <ConfirmDialog
+              trigger={
+                <Button variant="destructive">
+                  <Trash2 className="size-4" />
+                  삭제
+                </Button>
+              }
+              title="게시글 삭제"
+              description="정말 이 게시글을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+              confirmText="삭제"
+              onConfirm={onDelete}
+              variant="destructive"
+            />
           </div>
         )}
       </div>
