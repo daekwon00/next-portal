@@ -5,10 +5,7 @@ import {
   Shield,
   Users,
   Settings,
-  KeyRound,
-  Menu,
-  Code,
-  UserCog,
+  ArrowLeft,
 } from "lucide-react";
 
 export const mainMenuItems = [
@@ -21,14 +18,6 @@ export const adminMenuItems = [
   { label: "관리자 대시보드", href: "/admin", icon: Shield },
   { label: "사용자 관리", href: "/admin/users", icon: Users },
   { label: "게시판 관리", href: "/admin/boards", icon: FileText },
-  {
-    label: "시스템 관리",
-    icon: Settings,
-    children: [
-      { label: "역할 관리", href: "/admin/system/roles", icon: KeyRound },
-      { label: "메뉴 관리", href: "/admin/system/menus", icon: Menu },
-      { label: "권한 매핑", href: "/admin/system/menu-roles", icon: UserCog },
-      { label: "공통코드", href: "/admin/system/codes", icon: Code },
-    ],
-  },
+  { label: "시스템 관리", href: "/admin/system", icon: Settings },
+  { label: "메인으로 돌아가기", href: "/dashboard", icon: ArrowLeft },
 ];
