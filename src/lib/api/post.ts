@@ -1,5 +1,10 @@
 import { apiClient } from './client'
-import type { Post, CreatePostRequest, UpdatePostRequest } from '@/types/board'
+import type {
+  Post,
+  PostListItem,
+  CreatePostRequest,
+  UpdatePostRequest,
+} from '@/types/board'
 import type { PageResponse, PageParams } from '@/types/api'
 
 export async function getPosts(boardId: string, params?: PageParams) {
@@ -11,7 +16,7 @@ export async function getPosts(boardId: string, params?: PageParams) {
 
   return apiClient
     .get(`boards/${boardId}/posts`, { searchParams })
-    .json<PageResponse<Post>>()
+    .json<PageResponse<PostListItem>>()
 }
 
 export async function getPost(postId: number) {
@@ -28,4 +33,8 @@ export async function updatePost(postId: number, data: UpdatePostRequest) {
 
 export async function deletePost(postId: number) {
   return apiClient.delete(`posts/${postId}`).json()
+}
+
+export async function getRecentPosts() {
+  return apiClient.get('posts/recent').json<PostListItem[]>()
 }

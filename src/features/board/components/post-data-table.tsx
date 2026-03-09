@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
   type ColumnDef,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
 import {
   Table,
   TableBody,
@@ -13,59 +13,59 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Post } from "@/types/board";
-import { formatDate } from "@/lib/format";
-import Link from "next/link";
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import type { PostListItem } from '@/types/board'
+import { formatDate } from '@/lib/format'
+import Link from 'next/link'
 
-const columns: ColumnDef<Post>[] = [
+const columns: ColumnDef<PostListItem>[] = [
   {
-    accessorKey: "id",
-    header: "번호",
+    accessorKey: 'id',
+    header: '번호',
     size: 80,
     cell: ({ row }) => (
       <span className="text-muted-foreground">{row.original.id}</span>
     ),
   },
   {
-    accessorKey: "title",
-    header: "제목",
+    accessorKey: 'title',
+    header: '제목',
     cell: ({ row }) => (
       <Link
         href={`/boards/${row.original.boardId}/posts/${row.original.id}`}
-        className="hover:underline font-medium"
+        className="font-medium hover:underline"
       >
         {row.original.title}
       </Link>
     ),
   },
   {
-    accessorKey: "author",
-    header: "작성자",
+    accessorKey: 'author',
+    header: '작성자',
     size: 120,
-    cell: ({ row }) => row.original.author.name,
+    cell: ({ row }) => row.original.authorName,
   },
   {
-    accessorKey: "createdAt",
-    header: "작성일",
+    accessorKey: 'createdAt',
+    header: '작성일',
     size: 120,
     cell: ({ row }) => formatDate(row.original.createdAt),
   },
   {
-    accessorKey: "viewCount",
-    header: "조회",
+    accessorKey: 'viewCount',
+    header: '조회',
     size: 80,
     cell: ({ row }) => row.original.viewCount,
   },
-];
+]
 
 interface PostDataTableProps {
-  data: Post[];
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  data: PostListItem[]
+  page: number
+  totalPages: number
+  onPageChange: (page: number) => void
 }
 
 export function PostDataTable({
@@ -78,7 +78,7 @@ export function PostDataTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  });
+  })
 
   return (
     <div className="space-y-4">
@@ -156,5 +156,5 @@ export function PostDataTable({
         </div>
       )}
     </div>
-  );
+  )
 }

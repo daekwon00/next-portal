@@ -28,6 +28,16 @@ export interface FileInfo {
   contentType: string
 }
 
+export interface PostListItem {
+  id: number
+  boardId: string
+  title: string
+  authorName: string
+  viewCount: number
+  createdAt: string
+  updatedAt: string
+}
+
 export interface CreatePostRequest {
   boardId: string
   title: string

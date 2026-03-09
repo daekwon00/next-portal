@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { formatDate } from "@/lib/format";
-import type { Post } from "@/types/board";
+import Link from 'next/link'
+import { useQuery } from '@tanstack/react-query'
+import { getRecentPosts } from '@/lib/api/post'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { formatDate } from '@/lib/format'
+import type { PostListItem } from '@/types/board'
 
 function useRecentPosts() {
   return useQuery({
-    queryKey: ["posts", "recent"],
-    queryFn: () => apiClient.get("posts/recent").json<Post[]>(),
-  });
+    queryKey: ['posts', 'recent'],
+    queryFn: () => getRecentPosts(),
+  })
 }
 
 export function RecentPosts() {
-  const { data: posts, isLoading } = useRecentPosts();
+  const { data: posts, isLoading } = useRecentPosts()
 
   return (
     <Card>
@@ -54,5 +54,5 @@ export function RecentPosts() {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
