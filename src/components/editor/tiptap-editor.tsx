@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 import {
   Bold,
   Italic,
@@ -16,32 +16,33 @@ import {
   Undo,
   Redo,
   Minus,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { cn } from '@/lib/utils'
 
 interface TiptapEditorProps {
-  content: string;
-  onChange: (html: string) => void;
+  content: string
+  onChange: (html: string) => void
 }
 
 export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [StarterKit],
     content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      onChange(editor.getHTML())
     },
     editorProps: {
       attributes: {
         class:
-          "prose dark:prose-invert max-w-none min-h-[300px] p-4 focus:outline-none",
+          'prose dark:prose-invert max-w-none min-h-[300px] p-4 focus:outline-none',
       },
     },
-  });
+  })
 
-  if (!editor) return null;
+  if (!editor) return null
 
   return (
     <div className="rounded-md border">
@@ -50,7 +51,7 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 1 }).run()
           }
-          active={editor.isActive("heading", { level: 1 })}
+          active={editor.isActive('heading', { level: 1 })}
         >
           <Heading1 className="size-4" />
         </ToolbarButton>
@@ -58,7 +59,7 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 2 }).run()
           }
-          active={editor.isActive("heading", { level: 2 })}
+          active={editor.isActive('heading', { level: 2 })}
         >
           <Heading2 className="size-4" />
         </ToolbarButton>
@@ -66,51 +67,51 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 3 }).run()
           }
-          active={editor.isActive("heading", { level: 3 })}
+          active={editor.isActive('heading', { level: 3 })}
         >
           <Heading3 className="size-4" />
         </ToolbarButton>
         <Separator orientation="vertical" className="mx-1 h-6" />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
-          active={editor.isActive("bold")}
+          active={editor.isActive('bold')}
         >
           <Bold className="size-4" />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          active={editor.isActive("italic")}
+          active={editor.isActive('italic')}
         >
           <Italic className="size-4" />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          active={editor.isActive("strike")}
+          active={editor.isActive('strike')}
         >
           <Strikethrough className="size-4" />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleCode().run()}
-          active={editor.isActive("code")}
+          active={editor.isActive('code')}
         >
           <Code className="size-4" />
         </ToolbarButton>
         <Separator orientation="vertical" className="mx-1 h-6" />
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          active={editor.isActive("bulletList")}
+          active={editor.isActive('bulletList')}
         >
           <List className="size-4" />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          active={editor.isActive("orderedList")}
+          active={editor.isActive('orderedList')}
         >
           <ListOrdered className="size-4" />
         </ToolbarButton>
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          active={editor.isActive("blockquote")}
+          active={editor.isActive('blockquote')}
         >
           <Quote className="size-4" />
         </ToolbarButton>
@@ -135,7 +136,7 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
       </div>
       <EditorContent editor={editor} />
     </div>
-  );
+  )
 }
 
 function ToolbarButton({
@@ -144,10 +145,10 @@ function ToolbarButton({
   disabled,
   children,
 }: {
-  onClick: () => void;
-  active?: boolean;
-  disabled?: boolean;
-  children: React.ReactNode;
+  onClick: () => void
+  active?: boolean
+  disabled?: boolean
+  children: React.ReactNode
 }) {
   return (
     <Button
@@ -156,9 +157,9 @@ function ToolbarButton({
       size="sm"
       onClick={onClick}
       disabled={disabled}
-      className={cn("h-8 w-8 p-0", active && "bg-accent")}
+      className={cn('h-8 w-8 p-0', active && 'bg-accent')}
     >
       {children}
     </Button>
-  );
+  )
 }
