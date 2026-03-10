@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useDashboardStats } from '@/features/dashboard/hooks/use-dashboard'
 import { StatsCards } from '@/features/dashboard/components/stats-cards'
@@ -14,13 +13,13 @@ export default function DashboardPage() {
   const isAdmin = session?.user?.role === 'ADMIN'
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold">대시보드</h1>
-        <p className="text-muted-foreground text-sm">
-          안녕하세요,{' '}
-          <span className="font-medium">{session?.user?.name ?? '사용자'}</span>
-          님!
+        <h1 className="text-xl font-semibold tracking-tight">
+          안녕하세요, {session?.user?.name ?? '사용자'}님
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm">
+          오늘의 현황을 확인하세요.
         </p>
       </div>
       <StatsCards stats={stats} isLoading={isLoading} />
