@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { useProfile } from '@/features/user/hooks/use-profile'
+import { useProfile, useLoginHistory } from '@/features/user/hooks/use-profile'
 import { useQuery } from '@tanstack/react-query'
 import { getRecentPosts } from '@/lib/api/post'
 import { formatDate, formatDateTime } from '@/lib/format'
@@ -18,11 +18,12 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { KeyRound, UserCog, FileText } from 'lucide-react'
+import { KeyRound, UserCog, FileText, CheckCircle, XCircle } from 'lucide-react'
 
 export default function MyPage() {
   const { data: session } = useSession()
   const { data: profile, isLoading: profileLoading } = useProfile()
+  const { data: loginHistory, isLoading: historyLoading } = useLoginHistory(5)
   const { data: recentPosts, isLoading: postsLoading } = useQuery({
     queryKey: ['posts', 'recent'],
     queryFn: () => getRecentPosts(),
@@ -179,6 +180,55 @@ export default function MyPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* 로그인 이력 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>최근 로그인 이력</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {historyLoading ? (
+            <div className="space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
+              ))}
+            </div>
+          ) : !loginHistory?.length ? (
+            <p className="text-muted-foreground py-4 text-center text-sm">
+              로그인 이력이 없습니다.
+            </p>
+          ) : (
+            <div className="space-y-1">
+              {loginHistory.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between rounded-md px-3 py-2 text-sm"
+                >
+                  <div className="flex items-center gap-2">
+                    {item.loginSuccess ? (
+                      <CheckCircle className="size-4 text-green-500" />
+                    ) : (
+                      <XCircle className="size-4 text-red-500" />
+                    )}
+                    <span>
+                      {item.loginSuccess ? '로그인 성공' : '로그인 실패'}
+                    </span>
+                    {item.loginFailReason && (
+                      <span className="text-muted-foreground">
+                        ({item.loginFailReason})
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-muted-foreground flex items-center gap-3 text-xs">
+                    <span>{item.loginIp}</span>
+                    <span>{formatDateTime(item.loginDate)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

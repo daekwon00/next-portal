@@ -21,3 +21,10 @@ export interface ChangePasswordRequest {
   newPassword: string
   confirmPassword: string
 }
+
+export interface LoginHistory {
+  loginIp: string
+  loginSuccess: boolean
+  loginFailReason: string | null
+  loginDate: string
+}
