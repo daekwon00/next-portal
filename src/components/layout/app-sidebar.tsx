@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogOut, ChevronRight, Shield } from 'lucide-react'
+import { LogOut, ChevronRight, Shield, LayoutDashboard } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useMemo } from 'react'
 import { useMenuStore, type MenuItem } from '@/stores/menu-store'
@@ -126,14 +126,24 @@ export function AppSidebar() {
           <SidebarGroupLabel>메뉴</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === '/dashboard'}>
+                  <Link href="/dashboard">
+                    <LayoutDashboard />
+                    <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               {isLoaded &&
-                menus.map((item) => (
-                  <MenuItemComponent
-                    key={item.id}
-                    item={item}
-                    pathname={pathname}
-                  />
-                ))}
+                menus
+                  .filter((item) => item.path !== '/dashboard')
+                  .map((item) => (
+                    <MenuItemComponent
+                      key={item.id}
+                      item={item}
+                      pathname={pathname}
+                    />
+                  ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
