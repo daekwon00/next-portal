@@ -10,6 +10,8 @@ import {
   Menu,
   Code,
   UserCog,
+  MessageSquare,
+  UserCircle,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -25,6 +27,8 @@ export const iconMap: Record<string, LucideIcon> = {
   Menu,
   Code,
   UserCog,
+  MessageSquare,
+  UserCircle,
 }
 
 export const defaultIcon = FileText

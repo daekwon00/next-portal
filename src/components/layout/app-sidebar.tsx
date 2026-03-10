@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogOut, ChevronRight } from 'lucide-react'
+import { LogOut, ChevronRight, Shield } from 'lucide-react'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useMemo } from 'react'
 import { useMenuStore, type MenuItem } from '@/stores/menu-store'
@@ -140,6 +140,16 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          {session?.user?.role === 'ADMIN' && (
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/admin">
+                  <Shield />
+                  <span>관리자 모드</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <div className="flex items-center gap-2">

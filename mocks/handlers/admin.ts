@@ -56,27 +56,69 @@ const mockMenus = [
     ],
   },
   {
-    id: 'MENU_PROFILE',
-    name: '프로필',
-    path: '/user/profile',
-    icon: 'User',
+    id: 'MENU_AI_CHAT',
+    name: 'AI 채팅',
+    path: '/ai-chat',
+    icon: 'MessageSquare',
     sortOrder: 3,
     isActive: true,
     children: [],
+  },
+  {
+    id: 'MENU_MY_INFO',
+    name: '내 정보',
+    path: '/user',
+    icon: 'UserCircle',
+    sortOrder: 4,
+    isActive: true,
+    children: [
+      {
+        id: 'MENU_MYPAGE',
+        name: '마이페이지',
+        path: '/user/mypage',
+        sortOrder: 1,
+        isActive: true,
+        parentId: 'MENU_MY_INFO',
+      },
+      {
+        id: 'MENU_PROFILE',
+        name: '프로필 수정',
+        path: '/user/profile',
+        sortOrder: 2,
+        isActive: true,
+        parentId: 'MENU_MY_INFO',
+      },
+      {
+        id: 'MENU_CHANGE_PASSWORD',
+        name: '비밀번호 변경',
+        path: '/user/change-password',
+        sortOrder: 3,
+        isActive: true,
+        parentId: 'MENU_MY_INFO',
+      },
+    ],
   },
 ]
 
 const mockMenuRoles = [
   { menuId: 'MENU_DASHBOARD', roleId: 'ROLE_ADMIN' },
   { menuId: 'MENU_BOARDS', roleId: 'ROLE_ADMIN' },
-  { menuId: 'MENU_PROFILE', roleId: 'ROLE_ADMIN' },
   { menuId: 'MENU_NOTICE', roleId: 'ROLE_ADMIN' },
   { menuId: 'MENU_FREE', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_AI_CHAT', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_MY_INFO', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_MYPAGE', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_PROFILE', roleId: 'ROLE_ADMIN' },
+  { menuId: 'MENU_CHANGE_PASSWORD', roleId: 'ROLE_ADMIN' },
   { menuId: 'MENU_DASHBOARD', roleId: 'ROLE_USER' },
   { menuId: 'MENU_BOARDS', roleId: 'ROLE_USER' },
-  { menuId: 'MENU_PROFILE', roleId: 'ROLE_USER' },
   { menuId: 'MENU_NOTICE', roleId: 'ROLE_USER' },
   { menuId: 'MENU_FREE', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_AI_CHAT', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_MY_INFO', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_MYPAGE', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_PROFILE', roleId: 'ROLE_USER' },
+  { menuId: 'MENU_CHANGE_PASSWORD', roleId: 'ROLE_USER' },
 ]
 
 const mockCodeGroups = [
@@ -268,10 +310,12 @@ export const adminHandlers = [
   http.get('*/api/v1/menus/my', ({ request }) => {
     const authHeader = request.headers.get('Authorization')
     if (!authHeader) return new HttpResponse(null, { status: 401 })
-    // admin이면 adminMenus 포함, 일반 사용자는 빈 배열
+    // 토큰에서 역할 판별: admin 토큰이면 adminMenus 포함, 일반 사용자는 빈 배열
+    const token = authHeader.replace('Bearer ', '')
+    const isAdmin = token.includes('admin')
     return HttpResponse.json({
       menus: mockMenus,
-      adminMenus: mockAdminMenus,
+      adminMenus: isAdmin ? mockAdminMenus : [],
     })
   }),
 
