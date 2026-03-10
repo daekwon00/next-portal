@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { QueryProvider } from '@/providers/query-provider'
@@ -8,8 +8,8 @@ import { AuthProvider } from '@/providers/auth-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { MswProvider } from '@/providers/msw-provider'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 })
 
@@ -33,9 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
         <MswProvider>
           <AuthProvider>
             <ThemeProvider>
