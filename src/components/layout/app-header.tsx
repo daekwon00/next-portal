@@ -14,7 +14,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { useMenuStore, type MenuItem } from '@/stores/menu-store'
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 interface BreadcrumbEntry {
   label: string
@@ -80,23 +80,25 @@ export function AppHeader() {
           {breadcrumbs.map((crumb, i) => {
             const isLast = i === breadcrumbs.length - 1
             return (
-              <BreadcrumbItem key={i}>
+              <React.Fragment key={i}>
                 {i > 0 && <BreadcrumbSeparator />}
-                {isLast ? (
-                  <BreadcrumbPage className="text-sm font-medium">
-                    {crumb.label}
-                  </BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={crumb.href ?? '#'}
-                      className="text-muted-foreground text-sm"
-                    >
+                <BreadcrumbItem>
+                  {isLast ? (
+                    <BreadcrumbPage className="text-sm font-medium">
                       {crumb.label}
-                    </Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
+                    </BreadcrumbPage>
+                  ) : (
+                    <BreadcrumbLink asChild>
+                      <Link
+                        href={crumb.href ?? '#'}
+                        className="text-muted-foreground text-sm"
+                      >
+                        {crumb.label}
+                      </Link>
+                    </BreadcrumbLink>
+                  )}
+                </BreadcrumbItem>
+              </React.Fragment>
             )
           })}
         </BreadcrumbList>
