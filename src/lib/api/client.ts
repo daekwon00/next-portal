@@ -22,6 +22,15 @@ async function refreshAccessToken(): Promise<string | null> {
   }
 }
 
+async function forceLogout() {
+  try {
+    await signOut({ redirect: false })
+  } catch {
+    // signOut 실패해도 리다이렉트는 진행
+  }
+  window.location.href = '/login'
+}
+
 export class ApiError extends Error {
   status: number
   errors?: Record<string, string>
@@ -67,7 +76,7 @@ export const apiClient = ky.create({
             return ky(request)
           }
 
-          await signOut({ redirectTo: '/login' })
+          await forceLogout()
           throw new ApiError('인증이 만료되었습니다.', 401)
         }
 
