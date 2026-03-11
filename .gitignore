@@ -50,3 +50,11 @@ docs/**/*.md
 # Playwright
 playwright-report/
 test-results/
+
+# PWA (next-pwa 빌드 산출물)
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+public/swe-worker-*.js
+public/swe-worker-*.js.map

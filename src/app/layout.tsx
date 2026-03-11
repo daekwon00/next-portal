@@ -24,6 +24,13 @@ export const metadata: Metadata = {
     template: '%s',
   },
   description: 'Next.js Portal Application',
+  manifest: '/manifest.json',
+  themeColor: '#09090b',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Next Portal',
+  },
 }
 
 export default function RootLayout({
