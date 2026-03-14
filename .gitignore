@@ -41,11 +41,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# markdown docs (README.md 제외)
-docs/**/*.md
+# markdown docs (프로젝트 문서 제외)
 *.md
 !README.md
 !HELP.md
+!CLAUDE.md
+!prd.md
+!docs/**/*.md
 
 # Playwright
 playwright-report/
